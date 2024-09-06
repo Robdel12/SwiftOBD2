@@ -71,7 +71,7 @@ public struct CommandProperties {
 
   public func decode(data: Data, unit: MeasurementUnit = .metric) -> Result<DecodeResult, DecodeError> {
     let thing = decoder.performDecode(data: data.dropFirst(), unit: unit)
-    
+
     return decoder.performDecode(data: data.dropFirst(), unit: unit)
   }
 }

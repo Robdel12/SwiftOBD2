@@ -442,17 +442,17 @@ struct BatchedResponse {
     self.response = response
     self.unit = unit
   }
-  
+
   mutating func extractValue(_ cmd: OBDCommand) -> MeasurementResult? {
     let properties = cmd.properties
     let size = properties.bytes
     guard response.count >= size else { return nil }
     let valueData = response.prefix(size)
-    
+
     response.removeFirst(size)
     //        print("Buffer: \(buffer.compactMap { String(format: "%02X ", $0) }.joined())")
     let result = cmd.properties.decode(data: valueData, unit: unit)
-    
+
     switch result {
     case .success(let measurementResult):
       return measurementResult.measurementResult

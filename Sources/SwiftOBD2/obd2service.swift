@@ -72,7 +72,7 @@ public class OBDService: ObservableObject, OBDServiceDelegate {
       throw OBDServiceError.adapterConnectionFailed(underlyingError: error)
     }
   }
-  
+
   public func connectToVehicle(preferedProtocol: PROTOCOL? = nil) async throws -> OBDInfo {
     do {
       let obdInfo = try await initializeVehicle(preferedProtocol)
@@ -175,7 +175,7 @@ public class OBDService: ObservableObject, OBDServiceDelegate {
     guard let responseData = elm327.canProtocol?.parce(response).first?.data else { return [:] }
 
     var batchedResponse = BatchedResponse(response: responseData, unit: unit)
-    
+
     let results: [OBDCommand: MeasurementResult] = commands.reduce(into: [:]) { result, command in
       let measurement = batchedResponse.extractValue(command)
       result[command] = measurement
@@ -199,7 +199,7 @@ public class OBDService: ObservableObject, OBDServiceDelegate {
       throw OBDServiceError.commandFailed(command: command.properties.command, error: error)
     }
   }
-  
+
   /// Sends an OBD2 command to the vehicle and returns the raw response.
   ///  - Parameter command: The OBD2 command to send.
   ///  - Returns: The raw response from the vehicle.

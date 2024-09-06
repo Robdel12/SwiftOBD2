@@ -68,21 +68,21 @@ struct BitArray {
   }
 }
 
-public extension Unit {
-  static let percent = Unit(symbol: "%")
-  static let count = Unit(symbol: "count")
+extension Unit {
+  public static let percent = Unit(symbol: "%")
+  public static let count = Unit(symbol: "count")
   //    static let celsius = Unit(symbol: "°C")
-  static let degrees = Unit(symbol: "°")
-  static let gramsPerSecond = Unit(symbol: "g/s")
-  static let none = Unit(symbol: "")
-  static let rpm = Unit(symbol: "rpm")
+  public static let degrees = Unit(symbol: "°")
+  public static let gramsPerSecond = Unit(symbol: "g/s")
+  public static let none = Unit(symbol: "")
+  public static let rpm = Unit(symbol: "rpm")
   //    static let kph = Unit(symbol: "KP/H")
   //    static let mph = Unit(symbol: "MP/H")
 
-  static let Pascal = Unit(symbol: "Pa")
-  static let bar = Unit(symbol: "bar")
-  static let ppm = Unit(symbol: "ppm")
-  static let ratio = Unit(symbol: "ratio")
+  public static let Pascal = Unit(symbol: "Pa")
+  public static let bar = Unit(symbol: "bar")
+  public static let ppm = Unit(symbol: "ppm")
+  public static let ratio = Unit(symbol: "ratio")
 }
 
 class UAS {
@@ -394,21 +394,18 @@ func fuelRateDecoder(_ data: Data) -> Result<DecodeResult, DecodeError> {
 
 func odometerDecoder(_ data: Data) -> Result<DecodeResult, DecodeError> {
   guard data.count >= 4 else {
-    return .failure(.invalidData) // Handle error if data doesn't have enough bytes
+    return .failure(.invalidData)  // Handle error if data doesn't have enough bytes
   }
-  
+
   let A = Int(data[0])
   let B = Int(data[1])
   let C = Int(data[2])
   let D = Int(data[3])
-  
-  let odometerValue = (A * Int(pow(2.0, 24.0))) +
-  (B * Int(pow(2.0, 16.0))) +
-  (C * Int(pow(2.0, 8.0))) +
-  D
-  
+
+  let odometerValue = (A * Int(pow(2.0, 24.0))) + (B * Int(pow(2.0, 16.0))) + (C * Int(pow(2.0, 8.0))) + D
+
   let finalValue = Double(odometerValue) / 10.0
-  
+
   return .success(.measurementResult(MeasurementResult(value: finalValue, unit: UnitLength.kilometers)))
 }
 
@@ -500,9 +497,9 @@ func obdComplianceDecoder(_ data: Data) -> Result<DecodeResult, DecodeError> {
   guard data.count > 1 else {
     return .failure(.decodingFailed(reason: "Data does not contain enough elements"))
   }
-  
+
   let i = Int(data[1])
-  
+
   if i < OBD_COMPLIANCE.count {
     return .success(.stringResult(OBD_COMPLIANCE[i]))
   } else {
