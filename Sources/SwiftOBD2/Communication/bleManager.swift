@@ -80,7 +80,21 @@ class BLEManager: NSObject, CommProtocol {
 
   func disconnectPeripheral() {
     guard let connectedPeripheral = connectedPeripheral else { return }
+
+    // Cancel the connection to the peripheral
     centralManager.cancelPeripheralConnection(connectedPeripheral)
+
+    // Clear any ongoing message completion handlers
+    if sendMessageCompletion != nil {
+      logger.info("Clearing in-progress messages.")
+      sendMessageCompletion?(nil, BLEManagerError.peripheralNotConnected)
+      sendMessageCompletion = nil
+    }
+    
+    // Optionally reset other states related to communication (e.g., buffer)
+    buffer.removeAll()
+
+    logger.info("Disconnected from peripheral and cleared message state.")
   }
 
   // MARK: - Central Manager Delegate Methods
